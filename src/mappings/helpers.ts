@@ -7,7 +7,7 @@ import { User, LiquidityPosition } from '../types/schema'
 import { Factory as FactoryContract } from '../types/templates/Pair/Factory'
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
-export const FACTORY_ADDRESS = '0x2eeFa13703Eb4483Aa588Fd5D6bfb034E1FB8d97'
+export const FACTORY_ADDRESS = '0x0F1D652FFE4FE6b20928c19965cFB8Cfb56cfa4D'
 
 export let ZERO_BI = BigInt.fromI32(0)
 export let ONE_BI = BigInt.fromI32(1)

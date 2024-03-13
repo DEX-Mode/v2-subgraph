@@ -3,7 +3,7 @@ import { Pair, Token, Bundle } from '../types/schema'
 import { BigDecimal, Address } from '@graphprotocol/graph-ts/index'
 import { ZERO_BD, factoryContract, ADDRESS_ZERO } from './helpers'
 
-const WETH_ADDRESS = '0x4200000000000000000000000000000000000006'
+const WETH_ADDRESS = '0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9'
 
 // dummy for testing
 export function getEthPriceInUSD(): BigDecimal {
@@ -66,8 +66,8 @@ export function findEthPerToken(token: Token, maxDepthReached: boolean): BigDeci
 
 // token where amounts should contribute to tracked volume and liquidity
 let WHITELIST: string[] = [
-  '0x4200000000000000000000000000000000000006', // WETH
-  '0x4Bd692dbA81074BC2FA9abDcffE7324680d7A1c1'//PIX
+  '0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9', // WETH
+  '0x5620E871C6c52bAC4AF0cE4F436c9Bf94eA35338'//PIX
 
   // '0x6b175474e89094c44da98b954eedeac495271d0f', // DAI
   // '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', // USDC
