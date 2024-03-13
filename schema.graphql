@@ -4,7 +4,7 @@ type UniswapFactory @entity {
 
   # pair info
   pairCount: Int!
-  pairs: [Pair]!
+  pairs: [Pair!]!
 
   # total volume
   totalVolumeUSD: BigDecimal!
@@ -50,7 +50,7 @@ type Token @entity {
   allPairs: [Pair!]
 
   # saved for historical refernce of most liquid pairs
-  mostLiquidPairs: [PairDayData]!
+  mostLiquidPairs: [PairDayData!]!
 }
 
 type Pair @entity {
@@ -111,9 +111,9 @@ type Transaction @entity {
   id: ID! # txn hash
   blockNumber: BigInt!
   timestamp: BigInt!
-  mints: [Mint]!
-  burns: [Burn]!
-  swaps: [Swap]!
+  mints: [Mint!]!
+  burns: [Burn!]!
+  swaps: [Swap!]!
 }
 
 type Mint @entity {

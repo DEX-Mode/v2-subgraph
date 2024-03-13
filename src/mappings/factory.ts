@@ -16,7 +16,7 @@ import {
 // ian coin 0x19c506211A26A67Ad7E6D45CD274bAD1863f8667
 // ian weth pair 0x07762371f09ba11c9df64ced901cad7ff5104100
 
-let INCLUDED_PAIRS: string[] = ['0x07762371f09ba11c9df64ced901cad7ff5104100']
+let INCLUDED_PAIRS: string[] = ['0x115253bcd7D2c7ca706ca8605eE4Fd7D5fCEEBA0']
 
 export function handleNewPair(event: PairCreated): void {
   log.debug('event address {}', [event.params.pair.toHexString()])
@@ -96,11 +96,11 @@ export function handleNewPair(event: PairCreated): void {
   }
 
   let newAllPairsArray0 = token0.allPairs
-  newAllPairsArray0.push(event.params.pair.toHexString())
+  newAllPairsArray0!.push(event.params.pair.toHexString())
   token0.allPairs = newAllPairsArray0
 
   let newAllPairsArray1 = token1.allPairs
-  newAllPairsArray1.push(event.params.pair.toHexString())
+  newAllPairsArray1!.push(event.params.pair.toHexString())
   token1.allPairs = newAllPairsArray1
 
   let pair = new Pair(event.params.pair.toHexString()) as Pair

@@ -1,6 +1,6 @@
 import { PairHourData } from './../types/schema'
 /* eslint-disable prefer-const */
-import { BigInt, BigDecimal, EthereumEvent } from '@graphprotocol/graph-ts'
+import { BigInt, BigDecimal, ethereum } from '@graphprotocol/graph-ts'
 import { Pair, Bundle, Token, UniswapFactory, UniswapDayData, PairDayData, TokenDayData } from '../types/schema'
 import { ONE_BI, ZERO_BD, ZERO_BI, FACTORY_ADDRESS } from './helpers'
 
@@ -8,7 +8,7 @@ import { ONE_BI, ZERO_BD, ZERO_BI, FACTORY_ADDRESS } from './helpers'
 const maxTokenDayDatas = 10
 const maxPairDayDatas = 10
 
-export function updateUniswapDayData(event: EthereumEvent): void {
+export function updateUniswapDayData(event: ethereum.Event): void {
   let uniswap = UniswapFactory.load(FACTORY_ADDRESS)
   let timestamp = event.block.timestamp.toI32()
   let dayID = timestamp / 86400
@@ -24,18 +24,18 @@ export function updateUniswapDayData(event: EthereumEvent): void {
     uniswapDayData.totalLiquidityUSD = ZERO_BD
     uniswapDayData.totalLiquidityETH = ZERO_BD
     uniswapDayData.maxStored = maxTokenDayDatas
-    uniswapDayData.mostLiquidTokens = uniswap.mostLiquidTokens
+    uniswapDayData.mostLiquidTokens = uniswap!.mostLiquidTokens
     uniswapDayData.txCount = ZERO_BI
     uniswapDayData.save()
   }
   uniswapDayData = UniswapDayData.load(dayID.toString())
-  uniswapDayData.totalLiquidityUSD = uniswap.totalLiquidityUSD
-  uniswapDayData.totalLiquidityETH = uniswap.totalLiquidityETH
-  uniswapDayData.txCount = uniswap.txCount
-  uniswapDayData.save()
+  uniswapDayData!.totalLiquidityUSD = uniswap!.totalLiquidityUSD
+  uniswapDayData!.totalLiquidityETH = uniswap!.totalLiquidityETH
+  uniswapDayData!.txCount = uniswap!.txCount
+  uniswapDayData!.save()
 }
 
-export function updatePairDayData(event: EthereumEvent): void {
+export function updatePairDayData(event: ethereum.Event): void {
   let timestamp = event.block.timestamp.toI32()
   let dayID = timestamp / 86400
   let dayStartTimestamp = dayID * 86400
@@ -49,8 +49,8 @@ export function updatePairDayData(event: EthereumEvent): void {
     let pairDayData = new PairDayData(dayPairID)
     let pair = Pair.load(event.address.toHexString())
     pairDayData.date = dayStartTimestamp
-    pairDayData.token0 = pair.token0
-    pairDayData.token1 = pair.token1
+    pairDayData.token0 = pair!.token0
+    pairDayData.token1 = pair!.token1
     pairDayData.pairAddress = event.address
     pairDayData.reserve0 = ZERO_BD
     pairDayData.reserve1 = ZERO_BD
@@ -62,14 +62,14 @@ export function updatePairDayData(event: EthereumEvent): void {
     pairDayData.save()
   }
   pairDayData = PairDayData.load(dayPairID)
-  pairDayData.reserve0 = pair.reserve0
-  pairDayData.reserve1 = pair.reserve1
-  pairDayData.reserveUSD = pair.reserveUSD
-  pairDayData.dailyTxns = pairDayData.dailyTxns.plus(ONE_BI)
-  pairDayData.save()
+  pairDayData!.reserve0 = pair!.reserve0
+  pairDayData!.reserve1 = pair!.reserve1
+  pairDayData!.reserveUSD = pair!.reserveUSD
+  pairDayData!.dailyTxns = pairDayData!.dailyTxns.plus(ONE_BI)
+  pairDayData!.save()
 }
 
-export function updatePairHourData(event: EthereumEvent): void {
+export function updatePairHourData(event: ethereum.Event): void {
   let timestamp = event.block.timestamp.toI32()
   let hourIndex = timestamp / 3600 // get unique hour within unix history
   let hourStartIndex = hourIndex * 3600 // want the rounded effect
@@ -93,14 +93,14 @@ export function updatePairHourData(event: EthereumEvent): void {
     pairHourData.save()
   }
   pairHourData = PairHourData.load(hourPairID)
-  pairHourData.reserve0 = pair.reserve0
-  pairHourData.reserve1 = pair.reserve1
-  pairHourData.reserveUSD = pair.reserveUSD
-  pairHourData.hourlyTxns = pairHourData.hourlyTxns.plus(ONE_BI)
-  pairHourData.save()
+  pairHourData!.reserve0 = pair!.reserve0
+  pairHourData!.reserve1 = pair!.reserve1
+  pairHourData!.reserveUSD = pair!.reserveUSD
+  pairHourData!.hourlyTxns = pairHourData!.hourlyTxns.plus(ONE_BI)
+  pairHourData!.save()
 }
 
-export function updateTokenDayData(token: Token, event: EthereumEvent): void {
+export function updateTokenDayData(token: Token, event: ethereum.Event): void {
   let bundle = Bundle.load('1')
   let timestamp = event.block.timestamp.toI32()
   let dayID = timestamp / 86400
@@ -115,7 +115,7 @@ export function updateTokenDayData(token: Token, event: EthereumEvent): void {
     let tokenDayData = new TokenDayData(tokenDayID)
     tokenDayData.date = dayStartTimestamp
     tokenDayData.token = token.id
-    tokenDayData.priceUSD = token.derivedETH.times(bundle.ethPrice)
+    tokenDayData.priceUSD = token.derivedETH!.times(bundle!.ethPrice)
     tokenDayData.dailyVolumeToken = ZERO_BD
     tokenDayData.dailyVolumeETH = ZERO_BD
     tokenDayData.dailyVolumeUSD = ZERO_BD
@@ -128,12 +128,12 @@ export function updateTokenDayData(token: Token, event: EthereumEvent): void {
     tokenDayData.save()
   }
   tokenDayData = TokenDayData.load(tokenDayID)
-  tokenDayData.priceUSD = token.derivedETH.times(bundle.ethPrice)
-  tokenDayData.totalLiquidityToken = token.totalLiquidity
-  tokenDayData.totalLiquidityETH = token.totalLiquidity.times(token.derivedETH as BigDecimal)
-  tokenDayData.totalLiquidityUSD = tokenDayData.totalLiquidityETH.times(bundle.ethPrice)
-  tokenDayData.dailyTxns = tokenDayData.dailyTxns.plus(ONE_BI)
-  tokenDayData.save()
+  tokenDayData!.priceUSD = token.derivedETH!.times(bundle!.ethPrice)
+  tokenDayData!.totalLiquidityToken = token.totalLiquidity
+  tokenDayData!.totalLiquidityETH = token.totalLiquidity.times(token.derivedETH as BigDecimal)
+  tokenDayData!.totalLiquidityUSD = tokenDayData!.totalLiquidityETH.times(bundle!.ethPrice)
+  tokenDayData!.dailyTxns = tokenDayData!.dailyTxns.plus(ONE_BI)
+  tokenDayData!.save()
 
   /**
    * @todo test if this speeds up sync

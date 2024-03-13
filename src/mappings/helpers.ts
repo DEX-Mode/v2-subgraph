@@ -7,7 +7,7 @@ import { User, LiquidityPosition } from '../types/schema'
 import { Factory as FactoryContract } from '../types/templates/Pair/Factory'
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
-export const FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
+export const FACTORY_ADDRESS = '0x2eeFa13703Eb4483Aa588Fd5D6bfb034E1FB8d97'
 
 export let ZERO_BI = BigInt.fromI32(0)
 export let ONE_BI = BigInt.fromI32(1)
@@ -109,19 +109,26 @@ export function fetchTokenName(tokenAddress: Address): string {
 
 export function fetchTokenTotalSupply(tokenAddress: Address): BigInt {
   let contract = ERC20.bind(tokenAddress)
-  let totalSupplyValue = null
+  let totalSupplyValue: BigInt
   let totalSupplyResult = contract.try_totalSupply()
-  if (!totalSupplyResult.reverted) {
-    totalSupplyValue = totalSupplyResult as i32
+  // if (!totalSupplyResult.reverted) {
+  //   totalSupplyValue = totalSupplyResult as i32
+  // }
+  if (totalSupplyResult.reverted) {
+    // Handle revert case
+    totalSupplyValue = BigInt.fromI32(0)
+  } else {
+    // Extract the value from the CallResult
+    totalSupplyValue = totalSupplyResult.value
   }
-  return BigInt.fromI32(totalSupplyValue as i32)
+  return (totalSupplyValue)
 }
 
 export function fetchTokenDecimals(tokenAddress: Address): BigInt {
   let contract = ERC20.bind(tokenAddress)
   // try types uint8 for decimals
-  let decimalValue = null
   let decimalResult = contract.try_decimals()
+  let decimalValue = changetype<i32>(decimalResult)
   if (!decimalResult.reverted) {
     decimalValue = decimalResult.value
   }
